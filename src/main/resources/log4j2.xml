@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--implementation reference https://logging.apache.org/log4j/2.x/manual/layouts.html#JSONLayout-->
+<Configuration packages="at.hannesmoser.gleam">
+  <Appenders>
+    <Console name="console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%highlight{%p} | Thread %threadId:%threadName | %d{DEFAULT} | %c{1.}: %msg\n"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Logger name="at.hannesmoser.gleam" level="debug" additivity="false">
+      <AppenderRef ref="console"/>
+    </Logger>
+    <Root level="info" additivity="false">
+      <AppenderRef ref="console" />
+    </Root>
+  </Loggers>
+</Configuration>
