@@ -1,4 +1,5 @@
 val beamVersion = "2.23.0"
+val ktorVersion = "1.4.0"
 val log4jVersion = "2.13.3"
 
 plugins {
@@ -26,6 +27,10 @@ dependencies {
   // Beam
   implementation("org.apache.beam:beam-runners-direct-java:$beamVersion")
   implementation("org.apache.beam:beam-sdks-java-extensions-sql:$beamVersion")
+
+  // ktor
+  implementation("io.ktor:ktor-server-core:$ktorVersion")
+  implementation("io.ktor:ktor-server-netty:$ktorVersion")
 
   // Logging
   implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")

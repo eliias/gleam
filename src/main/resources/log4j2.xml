@@ -7,10 +7,10 @@
     </Console>
   </Appenders>
   <Loggers>
-    <Logger name="at.hannesmoser.gleam" level="debug" additivity="false">
+    <Logger name="at.hannesmoser.gleam" level="debug">
       <AppenderRef ref="console"/>
     </Logger>
-    <Root level="info" additivity="false">
+    <Root level="info">
       <AppenderRef ref="console" />
     </Root>
   </Loggers>

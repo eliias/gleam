@@ -1,4 +1,4 @@
-package at.hannesmoser.gleam
+package at.hannesmoser.gleam.pipelines
 
 import at.hannesmoser.gleam.sources.ExtractUsers
 import at.hannesmoser.gleam.transforms.Debug
