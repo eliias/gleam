@@ -1,6 +1,8 @@
-val beamVersion = "2.23.0"
-val ktorVersion = "1.4.0"
+val beamVersion = "2.24.0"
+val fakerVersion = "1.5.0"
+val jacksonVersion = "2.11.3"
 val log4jVersion = "2.13.3"
+val ktorVersion = "1.4.1"
 
 plugins {
   jacoco
@@ -31,15 +33,20 @@ dependencies {
   // ktor
   implementation("io.ktor:ktor-server-core:$ktorVersion")
   implementation("io.ktor:ktor-server-netty:$ktorVersion")
+  implementation("io.ktor:ktor-websockets:$ktorVersion")
 
   // Logging
   implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
   implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
   implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
 
+  // Serialization
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+
   // Tests
   testImplementation("org.jetbrains.kotlin:kotlin-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+  implementation("io.github.serpro69:kotlin-faker:$fakerVersion")
 }
 
 application {

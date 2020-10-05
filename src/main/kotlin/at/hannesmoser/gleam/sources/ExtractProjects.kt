@@ -1,7 +1,9 @@
 package at.hannesmoser.gleam.sources
 
-import at.hannesmoser.gleam.entities.User
-import at.hannesmoser.gleam.schemas.CSVUser
+import at.hannesmoser.gleam.entities.Project
+import at.hannesmoser.gleam.schemas.CSVProject
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.beam.sdk.extensions.sql.meta.provider.text.TextTableProvider
 import org.apache.beam.sdk.io.TextIO
 import org.apache.beam.sdk.transforms.MapElements
@@ -12,8 +14,8 @@ import org.apache.beam.sdk.values.PCollection
 import org.apache.beam.sdk.values.TypeDescriptor
 import org.apache.commons.csv.CSVFormat
 
-class ExtractUsers(private val filepath: String) : PTransform<PBegin, PCollection<User>>() {
-  override fun expand(input: PBegin): PCollection<User> {
+class ExtractProjects(private val filepath: String) : PTransform<PBegin, PCollection<Project>>() {
+  override fun expand(input: PBegin): PCollection<Project> {
     return input.apply(
       "read text file",
       TextIO
@@ -22,16 +24,17 @@ class ExtractUsers(private val filepath: String) : PTransform<PBegin, PCollectio
     )
       .apply(
         "parse csv",
-        TextTableProvider.CsvToRow(CSVUser.schema, CSVFormat.DEFAULT)
+        TextTableProvider.CsvToRow(CSVProject.schema, CSVFormat.DEFAULT)
       )
       .apply(
-        "map rows to users",
+        "map rows to projects",
         MapElements
-          .into(TypeDescriptor.of(User::class.java))
+          .into(TypeDescriptor.of(Project::class.java))
           .via(SerializableFunction {
-            User(
+            Project(
               it.getInt64("id")!!,
-              it.getString("name")!!
+              it.getString("name")!!,
+              it.getInt64("owner")!!
             )
           })
       )
