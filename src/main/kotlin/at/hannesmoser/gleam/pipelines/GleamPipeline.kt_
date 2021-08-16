@@ -1,25 +1,41 @@
 package at.hannesmoser.gleam.pipelines
 
+import at.hannesmoser.gleam.Pipeline
+import at.hannesmoser.gleam.entities.Project
 import at.hannesmoser.gleam.schemas.CSVProject
 import at.hannesmoser.gleam.schemas.CSVUser
 import at.hannesmoser.gleam.sources.ExtractRows
 import at.hannesmoser.gleam.sources.ExtractUnbounded
-import at.hannesmoser.gleam.transforms.Debug
+import at.hannesmoser.gleam.transforms.Log
 import at.hannesmoser.log.Logger
+import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.protobuf.ProtoBuf
 import org.apache.beam.runners.direct.DirectOptions
-import org.apache.beam.sdk.Pipeline
 import org.apache.beam.sdk.options.PipelineOptionsFactory
 import org.apache.beam.sdk.schemas.transforms.Join
+import org.apache.beam.sdk.transforms.PTransform
 import org.apache.beam.sdk.transforms.windowing.AfterWatermark
 import org.apache.beam.sdk.transforms.windowing.FixedWindows
 import org.apache.beam.sdk.transforms.windowing.Repeatedly
 import org.apache.beam.sdk.transforms.windowing.Window
+import org.apache.beam.sdk.values.PCollection
 import org.apache.beam.sdk.values.Row
 import org.joda.time.Duration
+import org.apache.beam.repackaged.direct_java.runners.core.construction.renderer.PipelineDotRenderer
+import org.apache.beam.sdk.io.GenerateSequence
+import org.apache.beam.sdk.metrics.MetricsEnvironment
+import org.apache.beam.sdk.transforms.DoFn
+import org.apache.beam.sdk.transforms.ParDo
+import org.apache.beam.sdk.values.PBegin
+import org.apache.beam.sdk.values.PDone
+import java.io.File
+import java.util.*
+import kotlin.concurrent.timer
 
 class GleamPipeline {
   companion object {
-    private val logger by Logger()
+    private val log by Logger()
   }
 
   fun run(args: Array<String>) {
@@ -29,6 +45,10 @@ class GleamPipeline {
       .`as`(DirectOptions::class.java)
 
     options.targetParallelism = 1
+
+    val project = Project(1, "Spurtli", 1)
+    val bytes = ProtoBuf.encodeToByteArray(project.name)
+    val decoded = ProtoBuf.decodeFromByteArray<String>(bytes)
 
     val pipeline = Pipeline.create(options)
 
@@ -60,14 +80,21 @@ class GleamPipeline {
     val projects = pipeline
       .apply("generate project sequence", ExtractUnbounded(csvProjects))
       .apply("projects window", window)
-      .apply("join on users", Join
-        .innerJoin<Row, Row>(users)
-        .on(Join.FieldsEqual
-          .left("id")
-          .right("project_id")
-        )
+      .apply(
+        "join on users", Join
+          .innerJoin<Row, Row>(users)
+          .on(
+            Join.FieldsEqual
+              .left("id")
+              .right("project_id")
+          )
       )
-      .apply("log", Debug("joined project with user"))
+      .apply("log", Log.info("joined project with user"))
+      .apply("experiment", object : PTransform<PCollection<Row>, PCollection<Row>>() {
+        override fun expand(input: PCollection<Row>): PCollection<Row> {
+          return input
+        }
+      })
 
     //val contributors = pipeline
     //  .apply("extract contributors", ExtractRows("./src/test/fixtures/contributors.csv", CSVContributors.schema))
@@ -93,6 +120,20 @@ class GleamPipeline {
     //    SqlTransform.query(sqlCountProjectContributors)
     //  )
     //  .apply("log", Debug())
+
+    // render pipeline
+//    val dotString = PipelineDotRenderer.toDotString(pipeline)
+//    File("graph.dot").writeText(dotString)
+
+    pipeline
+      .apply(GenerateSequence.from(0L).withRate(1, Duration.standardSeconds(1)))
+      .apply(ParDo.of(object : DoFn<Long, Void>() {
+        @ProcessElement
+        fun process() {
+          val container = MetricsEnvironment.getCurrentContainer()
+          val metrics = container
+        }
+      }))
 
     pipeline
       .run()

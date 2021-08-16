@@ -1,11 +1,12 @@
 package at.hannesmoser.gleam.entities
 
+import kotlinx.serialization.Serializable
 import org.apache.beam.sdk.schemas.JavaBeanSchema
 import org.apache.beam.sdk.schemas.annotations.DefaultSchema
 
+@Serializable
 @DefaultSchema(JavaBeanSchema::class)
-data class Project(
+data class User(
   var id: Long = -1,
-  var name: String = "",
-  var owner: Long = -1
+  var name: String = ""
 )
