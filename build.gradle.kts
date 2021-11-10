@@ -1,5 +1,8 @@
 val beamVersion = "2.33.0"
-val flinkVersion = "1.13"
+val beamFlinkVersion = "1.13"
+val flinkVersion = "1.13.1"
+val log4jVersion = "2.12.1"
+val slf4jVersion = "1.7.15"
 
 plugins {
   kotlin("jvm") version "1.5.31"
@@ -16,14 +19,28 @@ dependencies {
   // Beam
   //  implementation("org.apache.beam:beam-runners-direct-java:$beamVersion")
   implementation("org.apache.beam:beam-runners-direct-java:$beamVersion")
-  implementation("org.apache.beam:beam-runners-flink-$flinkVersion:$beamVersion")
-  implementation("org.apache.beam:beam-runners-flink-$flinkVersion-job-server:$beamVersion")
+  implementation("org.apache.beam:beam-runners-flink-$beamFlinkVersion:$beamVersion")
+  implementation("org.apache.beam:beam-runners-flink-$beamFlinkVersion-job-server:$beamVersion")
   implementation("org.apache.beam:beam-sdks-java-bom:$beamVersion")
+
+  // Flink
+  implementation("org.apache.flink:flink-streaming-java_2.11:$flinkVersion")
+  implementation("org.apache.flink:flink-connector-kafka_2.11:$flinkVersion")
+
+  // Logging
+  implementation("org.apache.logging.log4j:log4j-api:${log4jVersion}")
+  implementation("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+  implementation("org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}")
+  implementation("org.slf4j:slf4j-log4j12:${slf4jVersion}")
 }
 
 java {
   sourceCompatibility = JavaVersion.VERSION_1_8
   targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+configurations {
+  s
 }
 
 tasks {
