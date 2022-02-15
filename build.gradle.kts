@@ -1,8 +1,8 @@
 val beamVersion = "2.33.0"
 val beamFlinkVersion = "1.13"
 val flinkVersion = "1.13.1"
-val log4jVersion = "2.12.1"
-val slf4jVersion = "1.7.15"
+val log4jVersion = "2.14.1"
+val slf4jVersion = "1.7.32"
 
 plugins {
   kotlin("jvm") version "1.5.31"
@@ -24,8 +24,13 @@ dependencies {
   implementation("org.apache.beam:beam-sdks-java-bom:$beamVersion")
 
   // Flink
+  implementation("org.apache.flink:flink-table-api-java-bridge_2.11:$flinkVersion")
+  implementation("org.apache.flink:flink-table-planner-blink_2.11:$flinkVersion")
   implementation("org.apache.flink:flink-streaming-java_2.11:$flinkVersion")
   implementation("org.apache.flink:flink-connector-kafka_2.11:$flinkVersion")
+  implementation("org.apache.flink:flink-statebackend-rocksdb_2.11:$flinkVersion")
+  implementation("org.apache.flink:flink-csv:$flinkVersion")
+  implementation("org.apache.flink:flink-json:$flinkVersion")
 
   // Logging
   implementation("org.apache.logging.log4j:log4j-api:${log4jVersion}")
@@ -40,7 +45,6 @@ java {
 }
 
 configurations {
-  s
 }
 
 tasks {
@@ -51,6 +55,16 @@ tasks {
 
   register<JavaExec>("execute") {
     mainClass.set("at.hannesmoser.gleam.App")
+    classpath = sourceSets["main"].runtimeClasspath
+    args(
+      "--runner=FlinkRunner",
+      "--flinkMaster=flink.conc.at",
+      "--filesToStage=build/libs/gleam-0.0.1-SNAPSHOT-all.jar"
+    )
+  }
+
+  register<JavaExec>("run") {
+    mainClass.set("at.hannesmoser.gleam.FlinkApp")
     classpath = sourceSets["main"].runtimeClasspath
     args(
       "--runner=FlinkRunner",
