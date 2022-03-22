@@ -1,3 +1,5 @@
+@file:Suppress("PackageNaming")
+
 package at.hannesmoser.gleam.samples.g20_generator
 
 import at.hannesmoser.gleam.transforms.Log

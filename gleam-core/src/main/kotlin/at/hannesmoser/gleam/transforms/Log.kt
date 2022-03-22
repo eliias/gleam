@@ -5,12 +5,13 @@ import org.apache.beam.sdk.transforms.DoFn
 import org.apache.beam.sdk.transforms.ParDo
 import org.apache.logging.log4j.core.net.Severity
 
-class Log {
-  companion object {
-    fun <T> debug(msg: String = "") = ParDo.of<T, T>(WriterFn(msg, Severity.DEBUG))
-    fun <T> info(msg: String = "") = ParDo.of<T, T>(WriterFn(msg, Severity.INFO))
-    fun <T> error(msg: String = "") = ParDo.of<T, T>(WriterFn(msg, Severity.ERROR))
-  }
+object Log {
+  fun <T> debug(msg: String = "") =
+    ParDo.of<T, T>(WriterFn(msg, Severity.DEBUG))
+
+  fun <T> info(msg: String = "") = ParDo.of<T, T>(WriterFn(msg, Severity.INFO))
+  fun <T> error(msg: String = "") =
+    ParDo.of<T, T>(WriterFn(msg, Severity.ERROR))
 }
 
 private class WriterFn<T>(

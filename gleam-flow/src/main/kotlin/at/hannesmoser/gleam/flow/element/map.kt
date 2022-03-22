@@ -5,7 +5,9 @@ import org.apache.beam.sdk.transforms.SimpleFunction
 import org.apache.beam.sdk.values.PCollection
 import org.apache.beam.sdk.values.TypeDescriptor
 
-inline fun <InputT, reified OutputT> PCollection<InputT>.map(crossinline fn: (value: InputT) -> OutputT): PCollection<OutputT> =
+inline fun <InputT, reified OutputT> PCollection<InputT>.map(
+  crossinline fn: (value: InputT) -> OutputT
+): PCollection<OutputT> =
   apply(
     MapElements
       .into(TypeDescriptor.of(OutputT::class.java))

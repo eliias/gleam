@@ -1,3 +1,5 @@
+@file:Suppress("PackageNaming")
+
 package at.hannesmoser.gleam.samples.g04_pojo
 
 import at.hannesmoser.gleam.transforms.Log

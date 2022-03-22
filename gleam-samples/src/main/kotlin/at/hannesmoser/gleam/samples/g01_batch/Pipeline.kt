@@ -1,3 +1,5 @@
+@file:Suppress("PackageNaming")
+
 package at.hannesmoser.gleam.samples.g01_batch
 
 import at.hannesmoser.gleam.transforms.Log
@@ -17,43 +19,58 @@ object Pipeline {
     val pipeline = Pipeline.create()
 
     pipeline
-      .apply(Generator.longs(numElements = 20))
+      .apply(Generator.longs(numElements = 2000))
       .apply(Batcher())
       .apply(Log.info())
 
     pipeline.run()
   }
 
+  /**
+   * This transform batches all elements of a bundle into a list. This is
+   * a very useful technique for IO heavy DoFn's.
+   *
+   * Example: An upstream transform provides a collection of record keys, and
+   * the downstream transform needs to fetch the records from a persistent
+   * datastore, it is usually better to batch multiple keys into a single
+   * request.
+   */
   private class Batcher :
     PTransform<PCollection<Long>, PCollection<Iterable<@JvmWildcard Long>>>() {
     override fun expand(input: PCollection<Long>): PCollection<Iterable<Long>> =
       input
-        .apply(ParDo.of(object : DoFn<Long, Iterable<@JvmWildcard Long>>() {
-          private val maxBatchSize = 5
-          private val batch = mutableListOf<Long>()
-          private lateinit var lastWindow: BoundedWindow
+        .apply(
+          ParDo.of(
+            object : DoFn<Long, Iterable<@JvmWildcard Long>>() {
+              @Suppress("MagicNumber")
+              private val maxBatchSize = 5
+              private val batch = mutableListOf<Pair<BoundedWindow, Long>>()
 
-          @ProcessElement
-          fun process(context: ProcessContext, window: BoundedWindow) {
-            batch.add(context.element())
-            lastWindow = window
+              @ProcessElement
+              fun process(context: ProcessContext, window: BoundedWindow) {
+                batch.add(Pair(window, context.element()))
 
-            if (batch.size == maxBatchSize) {
-              context.output(batch.toList())
-              batch.clear()
-            }
-          }
+                if (batch.size == maxBatchSize) {
+                  context.output(batch.map { it.second }.toList())
+                  batch.clear()
+                }
+              }
 
-          @FinishBundle
-          fun finish(context: FinishBundleContext) {
-            context.output(
-              batch.toList(),
-              lastWindow.maxTimestamp(),
-              lastWindow
-            )
-            batch.clear()
-          }
-        }))
+              @FinishBundle
+              fun finish(context: FinishBundleContext) {
+                batch
+                  .groupBy(keySelector = { it.first })
+                  .forEach { (window, elements) ->
+                    context.output(
+                      elements.map { it.second }.toList(),
+                      window.maxTimestamp(),
+                      window
+                    )
+                  }
+                batch.clear()
+              }
+            })
+        )
         .setCoder(IterableCoder.of(VarLongCoder.of()))
   }
 }

@@ -6,8 +6,8 @@ val junitJupiterVersion = "5.8.2"
 val log4jVersion = "2.17.1"
 
 plugins {
-  jacoco
   kotlin("jvm")
+  jacoco
 }
 
 repositories {

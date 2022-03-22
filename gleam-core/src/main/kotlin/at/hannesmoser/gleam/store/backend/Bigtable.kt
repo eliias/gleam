@@ -22,7 +22,7 @@ class Bigtable(
     connection.getTable(TableName.valueOf(config.tableId))
   }
 
-  override fun <KeyT: Store.Key> has(key: KeyT): Boolean {
+  override fun <KeyT : Store.Key> has(key: KeyT): Boolean {
     return false
   }
 
@@ -31,10 +31,13 @@ class Bigtable(
     return results.iterator().next()
   }
 
-  override fun <KeyT : Store.Key, ValueT> read(vararg keys: KeyT) = read<KeyT, ValueT>(keys.toList())
+  override fun <KeyT : Store.Key, ValueT> read(vararg keys: KeyT) =
+    read<KeyT, ValueT>(keys.toList())
 
-
-  override fun <KeyT : Store.Key, ValueT> read(keys: Iterable<KeyT>): Iterable<Pair<ValueT?, Store.Backend.Failure<KeyT>?>> {
+  @Suppress("ReturnCount")
+  override fun <KeyT : Store.Key, ValueT> read(
+    keys: Iterable<KeyT>
+  ): Iterable<Pair<ValueT?, Store.Backend.Failure<KeyT>?>> {
     val request = keys.map { Get(it.toByteArray()) }
     val response = arrayOfNulls<Result>(keys.count())
 
@@ -42,7 +45,7 @@ class Bigtable(
       table.batch(request, response)
     } catch (e: IOException) {
       return keys.map { Pair(null, Store.Backend.Failure(it, e)) }
-    } catch(e: InterruptedException) {
+    } catch (e: InterruptedException) {
       return keys.map { Pair(null, Store.Backend.Failure(it, e)) }
     }
 
@@ -55,11 +58,15 @@ class Bigtable(
     }
   }
 
-  override fun <KeyT : Store.Key, ValueT> write(item: Pair<KeyT, ValueT>): Pair<Boolean, Store.Backend.Failure<KeyT>> {
+  override fun <KeyT : Store.Key, ValueT> write(
+    item: Pair<KeyT, ValueT>
+  ): Pair<Boolean, Store.Backend.Failure<KeyT>> {
     TODO("Not yet implemented")
   }
 
-  override fun <KeyT : Store.Key, ValueT> write(items: Iterable<Pair<KeyT, ValueT>>): Iterable<Pair<Boolean, Store.Backend.Failure<KeyT>>> {
+  override fun <KeyT : Store.Key, ValueT> write(
+    items: Iterable<Pair<KeyT, ValueT>>
+  ): Iterable<Pair<Boolean, Store.Backend.Failure<KeyT>>> {
     TODO("Not yet implemented")
   }
 }

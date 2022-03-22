@@ -1,3 +1,5 @@
+@file:Suppress("PackageNaming")
+
 package at.hannesmoser.gleam.samples.g02_dsl
 
 import at.hannesmoser.gleam.flow.aggregate.groupByKey
@@ -13,7 +15,9 @@ import org.apache.beam.sdk.transforms.windowing.FixedWindows
 import org.joda.time.Duration
 
 object Pipeline {
+
   @JvmStatic
+  @Suppress("MagicNumber")
   fun main(args: Array<String>) {
     val pipeline = Pipeline.create()
 

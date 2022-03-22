@@ -4,6 +4,7 @@ import io.github.serpro69.kfaker.Faker
 import org.apache.beam.sdk.schemas.Schema
 import org.apache.beam.sdk.schemas.logicaltypes.EnumerationType
 
+@Suppress("ComplexMethod", "LongMethod", "MagicNumber")
 internal fun schema(
   numFields: Int,
   allowedTypes: Array<Schema.TypeName>,
