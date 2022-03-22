@@ -1,7 +1,7 @@
 package at.hannesmoser.gleam.samples.g04_pojo
 
-import at.hannesmoser.gleam.transforms.Generator
 import at.hannesmoser.gleam.transforms.Log
+import at.hannesmoser.gleam.transforms.generator.Generator
 import org.apache.beam.sdk.Pipeline
 import org.apache.beam.sdk.schemas.JavaBeanSchema
 import org.apache.beam.sdk.schemas.JavaFieldSchema

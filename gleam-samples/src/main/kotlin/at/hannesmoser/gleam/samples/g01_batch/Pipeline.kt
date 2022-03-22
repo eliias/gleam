@@ -1,7 +1,7 @@
 package at.hannesmoser.gleam.samples.g01_batch
 
-import at.hannesmoser.gleam.transforms.Generator
 import at.hannesmoser.gleam.transforms.Log
+import at.hannesmoser.gleam.transforms.generator.Generator
 import org.apache.beam.sdk.Pipeline
 import org.apache.beam.sdk.coders.IterableCoder
 import org.apache.beam.sdk.coders.VarLongCoder
@@ -24,30 +24,36 @@ object Pipeline {
     pipeline.run()
   }
 
-  private class Batcher : PTransform<PCollection<Long>, PCollection<Iterable<@JvmWildcard Long>>>() {
-    override fun expand(input: PCollection<Long>) = input
-      .apply(ParDo.of(object : DoFn<Long, Iterable<@JvmWildcard Long>>() {
-        private val maxBatchSize = 5
-        private val batch = mutableListOf<Long>()
-        private lateinit var lastWindow: BoundedWindow
+  private class Batcher :
+    PTransform<PCollection<Long>, PCollection<Iterable<@JvmWildcard Long>>>() {
+    override fun expand(input: PCollection<Long>): PCollection<Iterable<Long>> =
+      input
+        .apply(ParDo.of(object : DoFn<Long, Iterable<@JvmWildcard Long>>() {
+          private val maxBatchSize = 5
+          private val batch = mutableListOf<Long>()
+          private lateinit var lastWindow: BoundedWindow
 
-        @ProcessElement
-        fun process(context: ProcessContext, window: BoundedWindow) {
-          batch.add(context.element())
-          lastWindow = window
+          @ProcessElement
+          fun process(context: ProcessContext, window: BoundedWindow) {
+            batch.add(context.element())
+            lastWindow = window
 
-          if (batch.size == maxBatchSize) {
-            context.output(batch.toList())
+            if (batch.size == maxBatchSize) {
+              context.output(batch.toList())
+              batch.clear()
+            }
+          }
+
+          @FinishBundle
+          fun finish(context: FinishBundleContext) {
+            context.output(
+              batch.toList(),
+              lastWindow.maxTimestamp(),
+              lastWindow
+            )
             batch.clear()
           }
-        }
-
-        @FinishBundle
-        fun finish(context: FinishBundleContext) {
-          context.output(batch.toList(), lastWindow.maxTimestamp(), lastWindow)
-          batch.clear()
-        }
-      }))
-      .setCoder(IterableCoder.of(VarLongCoder.of()))
+        }))
+        .setCoder(IterableCoder.of(VarLongCoder.of()))
   }
 }

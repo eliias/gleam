@@ -7,7 +7,6 @@ import org.apache.beam.sdk.transforms.Create
 import org.junit.Rule
 import org.junit.Test
 
-
 internal class CollectionTest {
   @Rule
   @JvmField
