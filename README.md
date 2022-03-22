@@ -46,3 +46,25 @@ pipeline.run()
 ```
 
 ## gleam-samples
+
+### 1. Batch
+
+This demo's batching of all elements of a bundle. This is a very useful
+technique for IO heavy DoFn's.
+
+Example: An upstream transform provides a collection of record keys, and the
+downstream transform needs to fetch the records from a persistent datastore, it
+is usually better to batch multiple keys into a single request.
+
+### 2. DSL
+
+A Kotlin specific Apache Beam DSL that allows applying transforms in a direct
+way onto collections.
+
+### 4. POJO's
+
+Demo's the usage of POJO's (Beans) and field schemas in Beam with Kotlin
+
+### 20. Generator
+
+A demo of the `gleam-core` Generator to create fake data for a pipeline.
