@@ -65,6 +65,10 @@ way onto collections.
 
 Demo's the usage of POJO's (Beans) and field schemas in Beam with Kotlin
 
+### 6. SDF
+
+A running version of the SDF example from the Apache Beam website.
+
 ### 20. Generator
 
 A demo of the `gleam-core` Generator to create fake data for a pipeline.
