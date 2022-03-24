@@ -1,8 +1,9 @@
 val beamVersion = "2.37.0"
 val bigtableBeamVersion = "2.0.0"
 val fakerVersion = "1.10.0"
-val jacksonVersion = "2.13.1"
+val jacksonVersion = "2.13.2"
 val junitJupiterVersion = "5.8.2"
+val koinVersion = "3.2.0-beta-1"
 val log4jVersion = "2.17.1"
 
 plugins {
@@ -26,6 +27,11 @@ dependencies {
   api("org.apache.beam:beam-runners-direct-java:$beamVersion")
   api("com.google.cloud.bigtable:bigtable-hbase-beam:$bigtableBeamVersion")
 
+  // Dependency Injection
+  api("io.insert-koin:koin-core:$koinVersion")
+  testImplementation("io.insert-koin:koin-test:$koinVersion")
+  testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
+
   // Faker
   implementation("io.github.serpro69:kotlin-faker:$fakerVersion")
 
@@ -36,6 +42,7 @@ dependencies {
 
   // Serialization
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion")
 
   // Tests
   testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
