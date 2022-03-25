@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 import org.koin.core.module.Module
 
 class GCP(
-  val projectId: String,
-  val instanceId: String
+  val projectId: String?,
+  val instanceId: String?
 ) : Resource {
   @JsonTypeName("GCP")
   data class Config(
-    val projectId: String,
-    val instanceId: String
+    val projectId: String?,
+    val instanceId: String?
   ) : ResourceConfig("GCP") {
     override fun register(
       id: String,

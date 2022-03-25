@@ -11,6 +11,7 @@ import org.koin.core.module.Module
 )
 abstract class ResourceConfig(
   val type: String,
+  val name: String? = null,
   val factory: Boolean? = null
 ) {
   abstract fun register(id: String, module: Module)

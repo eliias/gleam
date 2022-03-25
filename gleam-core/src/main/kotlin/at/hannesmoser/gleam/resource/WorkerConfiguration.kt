@@ -1,8 +1,10 @@
 package at.hannesmoser.gleam.resource
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonMerge
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 internal data class WorkerConfiguration(
-  val resources: List<ResourceConfig>
+  @JsonMerge
+  val resources: Map<String, ResourceConfig>?
 )

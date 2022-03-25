@@ -1,0 +1,5 @@
+resources:
+  GCP:
+    type: GCP
+    instance_id: development-instance-id
+    project_id: development-project

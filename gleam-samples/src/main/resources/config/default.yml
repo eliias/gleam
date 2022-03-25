@@ -1,6 +1,8 @@
 resources:
-  - type: GCP
+  GCP:
+    type: GCP
     instance_id: instance-id
     project_id: project
 
-  - type: Bigtable
+  Bigtable:
+    type: Bigtable

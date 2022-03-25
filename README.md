@@ -69,6 +69,10 @@ Demo's the usage of POJO's (Beans) and field schemas in Beam with Kotlin
 
 A running version of the SDF example from the Apache Beam website.
 
+### 14. Resources
+
+Inversion of Control and Dependency Injection with Apache Beam, Kotlin and Koin.
+
 ### 20. Generator
 
 A demo of the `gleam-core` Generator to create fake data for a pipeline.

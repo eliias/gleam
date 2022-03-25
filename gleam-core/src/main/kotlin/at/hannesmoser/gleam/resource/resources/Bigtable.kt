@@ -23,7 +23,7 @@ class Bigtable(private val gcp: GCP) : Resource {
     }
   }
 
-  fun write() = BigtableIO.write()
+  fun write(): BigtableIO.Write = BigtableIO.write()
     .withProjectId(gcp.projectId)
     .withInstanceId(gcp.instanceId)
 
