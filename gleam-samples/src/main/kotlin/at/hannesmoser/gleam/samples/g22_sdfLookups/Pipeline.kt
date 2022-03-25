@@ -17,6 +17,7 @@ import org.joda.time.Duration
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 
+@Suppress("MagicNumber")
 object Pipeline {
   @JvmStatic
   fun main(args: Array<String>) {
@@ -36,6 +37,7 @@ object Pipeline {
     pipeline.run()
   }
 
+  @Suppress("UnusedPrivateClass")
   private class ReadInChunks(
     private val chunkSize: Int = 512
   ) : DoFn<Iterable<Long>, String>() {
@@ -106,6 +108,7 @@ object Pipeline {
     }
   }
 
+  @Suppress("UnusedPrivateMember")
   private val filesPath = Pipeline::class.java
     .getResource("/files")!!
     .path

@@ -1,10 +1,11 @@
-val beamVersion = "2.37.0"
-val bigtableBeamVersion = "2.0.0"
-val fakerVersion = "1.10.0"
-val jacksonVersion = "2.13.2"
-val junitJupiterVersion = "5.8.2"
-val koinVersion = "3.2.0-beta-1"
-val log4jVersion = "2.17.1"
+val beamVersion = "2.43.0"
+val bigtableBeamVersion = "2.6.5"
+val fakerVersion = "1.13.0"
+val jacksonVersion = "2.14.1"
+val junitJupiterVersion = "5.9.1"
+val koinVersion = "3.3.2"
+val log4jVersion = "2.19.0"
+val slf4jVersion = "2.0.6"
 
 plugins {
   kotlin("jvm")
@@ -39,6 +40,7 @@ dependencies {
   api("org.apache.logging.log4j:log4j-api:$log4jVersion")
   api("org.apache.logging.log4j:log4j-core:$log4jVersion")
   api("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
+  runtimeOnly("org.slf4j:slf4j-jdk14:$slf4jVersion")
 
   // Serialization
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")

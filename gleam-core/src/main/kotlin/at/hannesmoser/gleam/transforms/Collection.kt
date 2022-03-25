@@ -66,4 +66,3 @@ object Collection {
     }
   }
 }
-

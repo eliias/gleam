@@ -61,6 +61,30 @@ is usually better to batch multiple keys into a single request.
 A Kotlin specific Apache Beam DSL that allows applying transforms in a direct
 way onto collections.
 
+### 3. Schema Extensions
+
+Add metadata to schemas or single fields. The metadata and hints are stored as
+schema options. Directly with the schema and field definition.
+
+```kotlin
+val schema = schema {
+  version("1.0")
+
+  // base
+  field("id", INT64.withNullable(true)) {
+    // adds the "version" extension
+    version("1.0")
+  }
+  fields(
+    Field.of("title", STRING),
+    Field.of("description", STRING)
+  ) {
+    // adds the "compress" extension to all fields!
+    compress()
+  }
+}
+```
+
 ### 4. POJO's
 
 Demo's the usage of POJO's (Beans) and field schemas in Beam with Kotlin

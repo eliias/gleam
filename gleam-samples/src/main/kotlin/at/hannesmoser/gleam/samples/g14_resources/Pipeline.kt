@@ -16,12 +16,12 @@ object Pipeline : Component {
     val instanceId = gcp.instanceId
     val projectId = gcp.projectId
 
-    println("GCP Config: instanceId=${instanceId}, projectId=${projectId}")
+    println("GCP Config: instanceId=$instanceId, projectId=$projectId")
 
     val writer = bigtable.write()
       .withTableId("products")
       .withWriteResults()
 
-    println("Bigtable Writer: writer=${writer}")
+    println("Bigtable Writer: writer=$writer")
   }
 }

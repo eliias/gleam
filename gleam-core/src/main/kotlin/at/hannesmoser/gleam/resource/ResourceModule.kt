@@ -27,6 +27,7 @@ class ResourceModule(
   override fun version(): Version =
     Version(1, 0, 0, "", "at.hannesmoser.jackson.subtype", "subtype")
 
+  @Suppress("SpreadOperator")
   override fun setupModule(context: SetupContext) {
     context.registerSubtypes(*findJsonSubTypes().toTypedArray())
   }

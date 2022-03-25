@@ -1,14 +1,14 @@
 import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
-  kotlin("jvm") version "1.6.10"
+  kotlin("jvm") version "1.8.0"
   jacoco
-  id("io.gitlab.arturbosch.detekt") version "1.19.0"
+  id("io.gitlab.arturbosch.detekt") version "1.22.0"
   id("com.adarshr.test-logger") version "3.2.0"
 }
 
 dependencies {
-  detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.19.0")
+  detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.22.0")
 }
 
 repositories {
@@ -35,5 +35,8 @@ subprojects {
         }
       }
     }
+  }
+  dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.22.0")
   }
 }
