@@ -76,3 +76,7 @@ Inversion of Control and Dependency Injection with Apache Beam, Kotlin and Koin.
 ### 20. Generator
 
 A demo of the `gleam-core` Generator to create fake data for a pipeline.
+
+### 23. Bigtable
+
+A demo of the `BigtableIO.write` transform.

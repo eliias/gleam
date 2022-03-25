@@ -1,34 +1,28 @@
-version: "3.8"
+version: "3.9"
 
 services:
   bigtable:
+    build:
+      context: .
+      dockerfile: config/docker/bigtable.dockerfile
     image: gleam-bigtable
     ports:
-      - 8086:8086
+      - "9035:9035"
     restart: always
 
   db:
     image: postgres:10-alpine
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
-      POSTGRES_DB: ${DB_NAME}
-    restart: always
-
-  hbase:
-    image: gleam-hbase
-    ports:
-      - 16010:16010
+    env_file: config/.env
     restart: always
 
   redis:
     image: redis:6-alpine
     ports:
-      - 6379:6379
+      - "6379:6379"
     volumes:
       - redis-data:/data
     restart: always
